@@ -30,24 +30,28 @@ model = Cfd_mlp.load_from_checkpoint("/home/dalmonte/CFD/MLWM/cfd_ml_update/note
 model.eval()
 model.to("cuda")
 
-utau10_flut_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau60_flut_test_nondim_dns.npz'))      #questo è quello dns
-u30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/u120_test_utau120EWM.npz'))
-v30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/v120_test_utau120EWM.npz'))
-w30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/w120_test_utau120EWM.npz'))
-u10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/u60_test_utau60EWM.npz'))
-v10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/v60_test_utau60EWM.npz'))
-w10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/w60_test_utau60EWM.npz'))
-utau_30_10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau120_utau60_EWM_test.npz'))
-utau10_EWM = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau60_EWM_test.npz'))
-utau30_EWM = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau120_EWM_test.npz'))
-ss_u30 = joblib.load('ss_u120_utau120_dns.pkl') 
-ss_v30 = joblib.load('ss_v120_utau120_dns.pkl') 
-ss_w30 = joblib.load('ss_w120_utau120_dns.pkl') 
-ss_u10 = joblib.load('ss_u30_utau30_dns.pkl') 
-ss_v10 = joblib.load('ss_v30_utau30_dns.pkl') 
-ss_w10 = joblib.load('ss_w30_utau30_dns.pkl') 
-ss_utau_30_10 = joblib.load('ss_utau_120_60_dns_original.pkl') 
-ss_target = joblib.load('ss_target_utau60flut_dns_nondim_dns.pkl')                #questo è quello dns
+#utau10_flut_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau60_flut_test_nondim_dns.npz'))      #questo è quello dns
+u10_test = dict(np.load('u10_test.npz'))      #questo è quello dns
+v10_test = dict(np.load('v10_test.npz'))      #questo è quello dns
+w10_test = dict(np.load('w10_test.npz'))      #questo è quello dns
+tauwall_test = dict(np.load('tauwall_test.npz'))
+#u30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/u120_test_utau120EWM.npz'))
+#v30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/v120_test_utau120EWM.npz'))
+#w30_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/w120_test_utau120EWM.npz'))
+#u10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/u60_test_utau60EWM.npz'))
+#v10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/v60_test_utau60EWM.npz'))
+#w10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/w60_test_utau60EWM.npz'))
+#utau_30_10_test = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau120_utau60_EWM_test.npz'))
+#utau10_EWM = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau60_EWM_test.npz'))
+#utau30_EWM = dict(np.load('/home/dalmonte/CFD/MLWM/Confronto_modelli/utau120_EWM_test.npz'))
+ss_u10 = joblib.load('ss_u10.pkl') 
+ss_v10 = joblib.load('ss_v10.pkl') 
+ss_w10 = joblib.load('ss_w10.pkl') 
+#ss_u10 = joblib.load('ss_u30_utau30_dns.pkl') 
+#ss_v10 = joblib.load('ss_v30_utau30_dns.pkl') 
+#ss_w10 = joblib.load('ss_w30_utau30_dns.pkl') 
+#ss_utau_30_10 = joblib.load('ss_utau_120_60_dns_original.pkl') 
+ss_target = joblib.load('ss_targets.pkl')                #questo è quello dns
 #mm_u60 = joblib.load('mm_u60_splitted.pkl') 
 #mm_v60 = joblib.load('mm_v60_splitted.pkl') 
 #mm_w60 = joblib.load('mm_w60_splitted.pkl') 
@@ -58,25 +62,25 @@ ss_target = joblib.load('ss_target_utau60flut_dns_nondim_dns.pkl')              
 #pt_target = joblib.load('pt_target_splitted.pkl')
 
 
-prediction_test_nondim = {}
+prediction_test = {}
 prediction_test_norm = {}
-for (key, chiaveu30, chiavev30, chiavew30, chiaveu10, chiavev10,chiavew10) in zip(utau10_flut_test.keys(), u30_test.keys(), v30_test.keys(), w30_test.keys(), u10_test.keys(), v10_test.keys(), w10_test.keys()):
+for (key, chiaveu10, chiavev10, chiavew10) in zip(tauwall_test.keys(), u10_test.keys(), v10_test.keys(), w10_test.keys())#, u10_test.keys(), v10_test.keys(), w10_test.keys()):
 
-    u30 = u30_test[chiaveu30].ravel()
-    v30 = v30_test[chiavev30].ravel()
-    w30 = w30_test[chiavew30].ravel()
+    #u30 = u30_test[chiaveu30].ravel()
+    #v30 = v30_test[chiavev30].ravel()
+    #w30 = w30_test[chiavew30].ravel()
     u10 = u10_test[chiaveu10].ravel()
     v10 = v10_test[chiavev10].ravel()
     w10 = w10_test[chiavew10].ravel()
-    utau_30_10 = utau_30_10_test[chiaveu10].ravel()
+    tauwall = tauwall_test[key].ravel()
     #utau_120_60 = np.log1p(utau_120_60)
-    u30 = ss_u30.transform(u30.reshape(-1,1)).ravel()
-    v30 = ss_v30.transform(v30.reshape(-1,1)).ravel()
-    w30 = ss_w30.transform(w30.reshape(-1,1)).ravel()
+    #u30 = ss_u30.transform(u30.reshape(-1,1)).ravel()
+    #v30 = ss_v30.transform(v30.reshape(-1,1)).ravel()
+    #w30 = ss_w30.transform(w30.reshape(-1,1)).ravel()
     u10 = ss_u10.transform(u10.reshape(-1,1)).ravel()
     v10 = ss_v10.transform(v10.reshape(-1,1)).ravel()
     w10 = ss_w10.transform(w10.reshape(-1,1)).ravel()
-    utau_30_10 = ss_utau_30_10.transform(utau_30_10.reshape(-1,1)).ravel()
+    tauwall = ss_target.transform(tauwall.reshape(-1,1)).ravel()
    # u60 = mm_u60.transform(u60.reshape(-1,1)).ravel()
    # v60 = mm_v60.transform(v60.reshape(-1,1)).ravel()
    # w60 = mm_w60.transform(w60.reshape(-1,1)).ravel()
@@ -84,14 +88,10 @@ for (key, chiaveu30, chiavev30, chiavew30, chiaveu10, chiavev10,chiavew10) in zi
    # v120 = mm_v120.transform(v120.reshape(-1,1)).ravel()
    # w120 = mm_w120.transform(w120.reshape(-1,1)).ravel()
 
-    X_test = np.zeros((u30.shape[0], 7))
-    X_test[:,0] = u30
-    X_test[:,1] = v30
-    X_test[:,2] = w30
-    X_test[:,3] = u10
-    X_test[:,4] = v10
-    X_test[:,5] = w10
-    X_test[:,6] = utau_30_10
+    X_test = np.zeros((u10.shape[0], 3))
+    X_test[:,0] = u10
+    X_test[:,1] = v10
+    X_test[:,2] = w10
 
     X_test = torch.tensor(X_test, dtype=torch.float32).to(device)
     with torch.no_grad(): 
@@ -102,7 +102,7 @@ for (key, chiaveu30, chiavev30, chiavew30, chiaveu10, chiavev10,chiavew10) in zi
         pred = ss_target.inverse_transform(pred.reshape(-1,1))
         #pred = np.exp(pred) -1
         pred = pred.reshape(121,64)
-        prediction_test_nondim[key] = pred
+        prediction_test[key] = pred
 
 
 Retau_mean = 1.02003270E+003
@@ -123,27 +123,27 @@ ywall = 0.0001442222
 
 #print(prediction_test['u_60_49'])
 
-utau10_flut_dns = {}
-for key in prediction_test_nondim.keys():
-    campo = np.zeros((121,64))
-    campo_pred = utau10_flut_test[key]
-    campo_utau10 = utau10_EWM[key]
-    for i in range(utau10_EWM['u_60_49'].shape[0]):
-        for j in range(utau10_EWM['u_60_49'].shape[1]):
-            campo[i,j] = campo_pred[i,j] * campo_utau10[i,j]
-    utau10_flut_dns[key] = campo
-print('-------------------------------------------------------------------------------------------------------')    
-print('-------------------------------------------------------------------------------------------------------')    
-prediction_test = {}
-for key in prediction_test_nondim.keys():
-    campo = np.zeros((121,64))
-    campo_pred = prediction_test_nondim[key]
-    campo_utau10 = utau10_EWM[key]
-    for i in range(utau10_EWM['u_60_49'].shape[0]):
-        for j in range(utau10_EWM['u_60_49'].shape[1]):
-            campo[i,j] = campo_pred[i,j] * campo_utau10[i,j]
-    prediction_test[key] = campo        
-        
+#utau10_flut_dns = {}
+#for key in prediction_test_nondim.keys():
+#    campo = np.zeros((121,64))
+#    campo_pred = utau10_flut_test[key]
+#    campo_utau10 = utau10_EWM[key]
+#    for i in range(utau10_EWM['u_60_49'].shape[0]):
+#        for j in range(utau10_EWM['u_60_49'].shape[1]):
+#            campo[i,j] = campo_pred[i,j] * campo_utau10[i,j]
+#    utau10_flut_dns[key] = campo
+#print('-------------------------------------------------------------------------------------------------------')    
+#print('-------------------------------------------------------------------------------------------------------')    
+#prediction_test = {}
+#for key in prediction_test_nondim.keys():
+#    campo = np.zeros((121,64))
+#    campo_pred = prediction_test_nondim[key]
+#    campo_utau10 = utau10_EWM[key]
+#    for i in range(utau10_EWM['u_60_49'].shape[0]):
+#        for j in range(utau10_EWM['u_60_49'].shape[1]):
+#            campo[i,j] = campo_pred[i,j] * campo_utau10[i,j]
+#    prediction_test[key] = campo        
+#        
                 
 #print(utau10_flut_dns['u_60_49'])
 #
@@ -168,12 +168,12 @@ x_less = x[::10]
 y_less = y[::10]
 
 pred_errore = {}
-for (key,keys) in zip(utau10_flut_dns.keys(),prediction_test.keys()):
-    pred_errore[key] = (prediction_test[keys] - utau10_flut_dns[key]) / utau10_flut_dns[key]
+for (key,keys) in zip(tauwall_test.keys(),prediction_test.keys()):
+    pred_errore[key] = (prediction_test[keys] - tauwall_test[key]) / tauwall_test[key]
     fig,ax = plt.subplots(3,1,figsize=(12,20))#, constrained_layout=True)
     utaumean_pred = np.mean(prediction_test[key], axis=(0,1))
-    utaumean_test = np.mean(utau10_flut_dns[key], axis=(0,1))
-    fig.suptitle('utauflut_test_mean = {:.5f}, utauflut_pred_mean = {:.5f}'.format(utaumean_test, utaumean_pred))
+    utaumean_test = np.mean(tauwall_test[key], axis=(0,1))
+    fig.suptitle('tauwall_test_mean = {:.5f}, tauwall_pred_mean = {:.5f}'.format(utaumean_test, utaumean_pred))
     ax[0].axis('scaled')
     ax[1].axis('scaled')
     ax[2].axis('scaled')
@@ -181,7 +181,7 @@ for (key,keys) in zip(utau10_flut_dns.keys(),prediction_test.keys()):
     vmax = utau10_flut_dns[key].max()
     vmin_errore = -1
     vmax_errore = 1
-    s1 = ax[0].pcolormesh(x_less[:-1],y_less,utau10_flut_dns[key].T, vmin=vmin, vmax=vmax, cmap='inferno', shading='auto')
+    s1 = ax[0].pcolormesh(x_less[:-1],y_less,tauwall_test[key].T, vmin=vmin, vmax=vmax, cmap='inferno', shading='auto')
     s2 = ax[1].pcolormesh(x_less[:-1],y_less,prediction_test[keys].T, vmin=vmin, vmax=vmax, cmap='inferno', shading='auto')
     e1 = ax[2].pcolormesh(x_less[:-1],y_less,pred_errore[key].T, vmin=vmin_errore, vmax=vmax_errore, cmap='coolwarm', shading='auto')
     ax[0].set_xlim(0,5)
@@ -201,7 +201,7 @@ for (key,keys) in zip(utau10_flut_dns.keys(),prediction_test.keys()):
     fig.colorbar(s1, cax=cbar_ax, label='Valore')
     fig.colorbar(e1, cax=cbar_ax1, label='Errore')
     plt.subplots_adjust(right=0.9)  # lascia spazio alla colorbar
-    plt.savefig('utau60flut_nondim_dns/utau60_flut_correct/Slice_targetnorm_{}.png'.format(key), dpi=300)
+    plt.savefig('RESULTS/Slice_targetnorm_{}.png'.format(key), dpi=300)
     #plt.show()
     plt.close()
 
@@ -209,7 +209,7 @@ y_hat = np.array([])
 y = np.array([])
 for key in prediction_test.keys():
     campo_pred = prediction_test[key].ravel()
-    campo_target = utau10_flut_dns[key].ravel()
+    campo_target = tauwall_test[key].ravel()
     y_hat = np.append(y_hat, campo_pred)
     y = np.append(y, campo_target)
 
@@ -222,7 +222,7 @@ r2 = r2_score(y , y_hat )
 r2_inverso = r2_score(-y, y_hat)
 rms = np.sqrt(mse)
 mae = mean_absolute_error(y , y_hat)
-print('prestazioni modello Retau1000 utau60flut LeakyReLU, MSE')
+print('prestazioni modello Retau1000 utau10 LeakyReLU, MSE')
 print('MSE : {}'.format(mse))
 print('MAE : {}'.format(mean_absolute_error(y , y_hat)))
 print('R2 : {}'.format(r2))
@@ -261,16 +261,18 @@ ax[0].set_xlim(y.min(), y.max())
 ax[0].set_ylim(y.min(), y.max())
 ax[1].set_xlim(y.min(), y.max())
 ax[1].set_ylim(y.min(), y.max())
-ax[0].set_xlabel('utau60 flut target')
-ax[0].set_ylabel('utau60 flut prediction ')
-ax[0].set_title('utau60 flut')
-ax[1].set_xlabel('utau60 flut target')
-ax[1].set_ylabel('utau60 flut prediction')
-ax[1].set_title('utau60 flut')
+ax[0].set_xlabel('tauwalll target')
+ax[0].set_ylabel('tauwall pred ')
+ax[0].set_title('tauwall')
+ax[1].set_xlabel('tauwall target')
+ax[1].set_ylabel('tauwall pred')
+ax[1].set_title('tauwall')
+plt.savefig('RESULTS/results.png',dpi=300)
 plt.show()
 #plt.savefig('utau60_targetnorm_nondim_dns.png', dpi=300)
 plt.close()
 
+exit()
 utau_target = {}
 utau_pred = {}
 

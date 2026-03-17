@@ -56,11 +56,11 @@ tauwall_mean = rho * (utau_mean ** 2)
     #data = np.load('../../../../DATA/dataset_retau_1000_tauwall_target.npy')
     #data = np.load('new_dataset.npy')
     # In[4]:
-train = np.load('dataset_train_utau30flut_nondim_dns.npy')
+train = np.load('DATA_u10/train_dataset_y10.npy')
 if __name__ == "__main__":
 
-    test = np.load('dataset_test_utau30flut_nondim_dns.npy')
-    valid = np.load('dataset_valid_utau30flut_nondim_dns.npy')
+    test = np.load('DATA_u10/test_dataset_y10.npy')
+    valid = np.load('DATA_u10/valid_dataset_y10.npy')
     
 y_train = train[:,0]
 if __name__ == "__main__":
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     y_test = ss_target.transform(y_test.reshape(-1,1)).ravel()
     y_val = ss_target.transform(y_val.reshape(-1,1)).ravel()
     ss_w60 = PowerTransformer().fit(X_train[:,2].reshape(-1,1))
-    ss_w120 = PowerTransformer().fit(X_train[:,5].reshape(-1,1))
+   # ss_w120 = PowerTransformer().fit(X_train[:,5].reshape(-1,1))
   #  ss_w60 = StandardScaler().fit(X_train[:,2].reshape(-1,1))
   #  ss_w120 = StandardScaler().fit(X_train[:,5].reshape(-1,1))
   #  mm = MinMaxScaler(feature_range = (-1,1))
@@ -118,18 +118,18 @@ if __name__ == "__main__":
     
     ss_u60  = PowerTransformer('yeo-johnson').fit(X_train[:,0].reshape(-1,1))
     ss_v60  = PowerTransformer('yeo-johnson').fit(X_train[:,1].reshape(-1,1))
-    ss_u120 = PowerTransformer('yeo-johnson').fit(X_train[:,3].reshape(-1,1))
-    ss_v120 = PowerTransformer('yeo-johnson').fit(X_train[:,4].reshape(-1,1))
+    #ss_u120 = PowerTransformer('yeo-johnson').fit(X_train[:,3].reshape(-1,1))
+    #ss_v120 = PowerTransformer('yeo-johnson').fit(X_train[:,4].reshape(-1,1))
 
     import joblib
    # joblib.dump(pt_target, 'pt_target_splitted.pkl')
-    joblib.dump(ss_u60, 'ss_u120_utau120_dns.pkl')
-    joblib.dump(ss_v60, 'ss_v120_utau120_dns.pkl')
-    joblib.dump(ss_w60, 'ss_w120_utau120_dns.pkl')
-    joblib.dump(ss_u120, 'ss_u30_utau30_dns.pkl')
-    joblib.dump(ss_v120, 'ss_v30_utau30_dns.pkl')
-    joblib.dump(ss_w120, 'ss_w30_utau30_dns.pkl')
-    joblib.dump(ss_target, 'ss_target_utau60flut_dns_nondim_dns.pkl')
+    joblib.dump(ss_u60, 'ss_u10.pkl')
+    joblib.dump(ss_v60, 'ss_v10.pkl')
+    joblib.dump(ss_w60, 'ss_w10.pkl')
+    #joblib.dump(ss_u120, 'ss_u30_utau30_dns.pkl')
+    #joblib.dump(ss_v120, 'ss_v30_utau30_dns.pkl')
+    #joblib.dump(ss_w120, 'ss_w30_utau30_dns.pkl')
+    joblib.dump(ss_target, 'ss_target.pkl')
   #  joblib.dump(mm_u60, 'mm_u60_splitted.pkl')
   #  joblib.dump(mm_v60, 'mm_v60_splitted.pkl')
   #  joblib.dump(mm_w60, 'mm_w60_splitted.pkl')
@@ -156,16 +156,16 @@ if __name__ == "__main__":
   #  X_test_standardized[:,1] = mm_v60.transform(X_test_standardized[:,1].reshape(-1,1)).ravel()
   #  X_val_standardized[:,1] = mm_v60.transform(X_val_standardized[:,1].reshape(-1,1)).ravel()
     
-    X_train_standardized[:,3] = ss_u120.transform(X_train[:,3].reshape(-1,1)).ravel()
-    X_test_standardized[:,3] = ss_u120.transform(X_test[:,3].reshape(-1,1)).ravel()
-    X_val_standardized[:,3] = ss_u120.transform(X_val[:,3].reshape(-1,1)).ravel()
+    #X_train_standardized[:,3] = ss_u120.transform(X_train[:,3].reshape(-1,1)).ravel()
+    #X_test_standardized[:,3] = ss_u120.transform(X_test[:,3].reshape(-1,1)).ravel()
+    #X_val_standardized[:,3] = ss_u120.transform(X_val[:,3].reshape(-1,1)).ravel()
   #  X_train_standardized[:,3] = mm_u120.transform(X_train_standardized[:,3].reshape(-1,1)).ravel()
   ##  X_test_standardized[:,3] = mm_u120.transform(X_test_standardized[:,3].reshape(-1,1)).ravel()
   ##  X_val_standardized[:,3] = mm_u120.transform(X_val_standardized[:,3].reshape(-1,1)).ravel()
   # 
-    X_train_standardized[:,4] = ss_v120.transform(X_train[:,4].reshape(-1,1)).ravel()
-    X_test_standardized[:,4] = ss_v120.transform(X_test[:,4].reshape(-1,1)).ravel()
-    X_val_standardized[:,4] = ss_v120.transform(X_val[:,4].reshape(-1,1)).ravel()
+    #X_train_standardized[:,4] = ss_v120.transform(X_train[:,4].reshape(-1,1)).ravel()
+    #X_test_standardized[:,4] = ss_v120.transform(X_test[:,4].reshape(-1,1)).ravel()
+    #X_val_standardized[:,4] = ss_v120.transform(X_val[:,4].reshape(-1,1)).ravel()
   ##  X_train_standardized[:,4] = mm_v120.transform(X_train_standardized[:,4].reshape(-1,1)).ravel()
   ##  X_test_standardized[:,4] = mm_v120.transform(X_test_standardized[:,4].reshape(-1,1)).ravel()
   ##  X_val_standardized[:,4] = mm_v120.transform(X_val_standardized[:,4].reshape(-1,1)).ravel()
@@ -177,9 +177,9 @@ if __name__ == "__main__":
   #  X_test_standardized[:,2] = mm_w60.transform(X_test_standardized[:,2].reshape(-1,1)).ravel()
   #  X_val_standardized[:,2] = mm_w60.transform(X_val_standardized[:,2].reshape(-1,1)).ravel()
     
-    X_train_standardized[:,5] = ss_w120.transform(X_train[:,5].reshape(-1,1)).ravel()
-    X_test_standardized[:,5] = ss_w120.transform(X_test[:,5].reshape(-1,1)).ravel()
-    X_val_standardized[:,5] = ss_w120.transform(X_val[:,5].reshape(-1,1)).ravel()
+    #X_train_standardized[:,5] = ss_w120.transform(X_train[:,5].reshape(-1,1)).ravel()
+    #X_test_standardized[:,5] = ss_w120.transform(X_test[:,5].reshape(-1,1)).ravel()
+    #X_val_standardized[:,5] = ss_w120.transform(X_val[:,5].reshape(-1,1)).ravel()
   #  X_train_standardized[:,5] = mm_w120.transform(X_train_standardized[:,5].reshape(-1,1)).ravel()
   #  X_test_standardized[:,5] = mm_w120.transform(X_test_standardized[:,5].reshape(-1,1)).ravel()
   #  X_val_standardized[:,5] = mm_w120.transform(X_val_standardized[:,5].reshape(-1,1)).ravel()
@@ -189,13 +189,13 @@ if __name__ == "__main__":
    # X_val_standardized[:,6] = np.log1p(X_val[:,6])
    # ss_utau_120_60 = StandardScaler().fit(X_train_standardized[:,6].reshape(-1,1))
    # ss_utau_120_60 = StandardScaler().fit(X_train[:,6].reshape(-1,1))
-    ss_utau_120_60 = PowerTransformer('yeo-johnson').fit(X_train[:,6].reshape(-1,1))
+    #ss_utau_120_60 = PowerTransformer('yeo-johnson').fit(X_train[:,6].reshape(-1,1))
 
-    X_train_standardized[:,6] = ss_utau_120_60.transform(X_train[:,6].reshape(-1,1)).ravel()
-    X_test_standardized[:,6] = ss_utau_120_60.transform(X_test[:,6].reshape(-1,1)).ravel()
-    X_val_standardized[:,6] = ss_utau_120_60.transform(X_val[:,6].reshape(-1,1)).ravel()
+    #X_train_standardized[:,6] = ss_utau_120_60.transform(X_train[:,6].reshape(-1,1)).ravel()
+    #X_test_standardized[:,6] = ss_utau_120_60.transform(X_test[:,6].reshape(-1,1)).ravel()
+    #X_val_standardized[:,6] = ss_utau_120_60.transform(X_val[:,6].reshape(-1,1)).ravel()
 
-    joblib.dump(ss_utau_120_60, 'ss_utau_120_60_dns_original.pkl')
+    #joblib.dump(ss_utau_120_60, 'ss_utau_120_60_dns_original.pkl')
  
   #  fig, ax = plt.subplots(7,1, figsize = (6,20))
   #  sns.histplot(X_train_standardized[:,0], stat='density', bins=100, kde=True, ax=ax[0])
@@ -460,14 +460,14 @@ if __name__ == "__main__":
     
     
     # trainer
-    logger = TensorBoardLogger('tb_logs_utau60flut', name='utauall_model_allFEATURES_splitted', version='EWM_enhanced_utau60flut_nondim_targetnorm_maeloss_dns_120_60_correct') #logger per monitoraggio allenamento
+    logger = TensorBoardLogger('tb_logs', name='tauwall_pred_from_y10', version='non_normalized_data') #logger per monitoraggio allenamento
     checkpoint = ModelCheckpoint(
         dirpath="checkpoints_utau60flut",
-        filename="best_model_EWM_utau60flut_nondim_MSE_targetnorm_dns_120_60_correct-{epoch:02d}-{val_loss:.2f}_nondimtarget",
+        filename="best_model_dim_MSE-{epoch:02d}-{val_loss:.2f}_nondimtarget",
         monitor='val_loss', 
         save_top_k=3, 
         mode='min') #permette di salvare lo stato del modello e riprendere l'allenamento i  seguito
-    earlystop = EarlyStopping(monitor='val_loss', patience=60, mode='min')
+    earlystop = EarlyStopping(monitor='val_loss', patience=40, mode='min')
     trainer = pl.Trainer(accelerator="gpu",
                          devices=1,
                          #gpu=1,
